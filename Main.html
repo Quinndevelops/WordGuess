@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Guessing Game</title>
+    <style>
+        body {
+            background-color: #1C1C1D;
+            color: #fff;
+            font-family: sans-serif;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        input {
+            padding: 5px;
+            border: 1px solid #1c1c1d;
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-size: 16px;
+            margin: 3px;
+            height: auto;
+            width: auto;
+            background-color: #6F7073;    
+            color: #fff;
+        }
+        .try { 
+            background-color: #3478F5;
+            border-radius: 10px;
+            border: 1px solid #1c1c1d;
+            box-sizing: border-box;
+            padding: 5px;
+            margin: 3px;
+            height: auto;
+            width: auto;
+            font-size: 16px;
+            display: inline-block;
+            text-align: center;
+            color: #fff;
+        }
+        .message {
+            color: #fff;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        .high-score {
+            color: #fff;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Higher or Lower Number Guessing Game</h1>
+    <p>Try to guess the correct number between 1 and 1000.</p>
+    
+    <input type="number" inputmode="numeric" id="guess" placeholder="Enter your guess">
+    <br>
+    <button onclick="checkGuess()" class="try">Guess</button>
+
+    <p id="message" class="message"></p>
+    <p id="highScore" class="high-score"></p>
+
+    <script>
+        let targetNumber, attempts, highScore;
+
+        function startNewGame() {
+            targetNumber = Math.floor(Math.random() * 1000) + 1;
+            attempts = 0;
+        }
+
+        function checkGuess() {
+            const userGuess = parseInt(document.getElementById('guess').value);
+
+            if (isNaN(userGuess) || userGuess < 1 || userGuess > 1000) {
+                document.getElementById('message').innerHTML = 'Please enter a valid number between 1 and 1000.';
+                return;
+            }
+
+            attempts++;
+
+            if (userGuess === targetNumber) {
+                document.getElementById('message').innerHTML = `Congratulations! You guessed the correct number in ${attempts} attempts.`;
+                
+                if (attempts < highScore || highScore === undefined) {
+                    highScore = attempts;
+                    document.getElementById('highScore').innerHTML = `High Score: ${highScore} attempts!`;
+                }
+
+                startNewGame();
+
+                // Clear the Congratulations message after 3 seconds
+                setTimeout(() => {
+                    document.getElementById('message').innerHTML = '';
+                }, 3000);
+            } else if (userGuess < targetNumber) {
+                document.getElementById('message').insertAdjacentHTML('afterbegin', 'Try a higher number.<br>');
+            } else {
+                document.getElementById('message').insertAdjacentHTML('afterbegin', 'Try a lower number.<br>');
+            }
+        }
+
+        // Initialize the game
+        startNewGame();
+    </script>
+</body>
+</html>
