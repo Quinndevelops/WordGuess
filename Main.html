@@ -3,16 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Number Guessing Game</title>
+    <title>Word Guessing Game</title>
     <style>
         body {
-            background-color: #1C1C1D;
-            color: #fff;
-            font-family: sans-serif;
-            overflow: hidden;
+            font-family: Arial, sans-serif;
             text-align: center;
+            background-color: #1c1c1d;
+            color: #fff;
         }
-
         input {
             padding: 5px;
             border: 1px solid #1c1c1d;
@@ -25,84 +23,72 @@
             background-color: #6F7073;    
             color: #fff;
         }
-        .try { 
-            background-color: #3478F5;
-            border-radius: 10px;
-            border: 1px solid #1c1c1d;
-            box-sizing: border-box;
+        button {
             padding: 5px;
+            text-size: 16px;
+            border: 1px solid #1c1c1d;
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-size: 16px;
             margin: 3px;
             height: auto;
             width: auto;
-            font-size: 16px;
-            display: inline-block;
-            text-align: center;
-            color: #fff;
-        }
-        .message {
-            color: #fff;
-            font-size: 16px;
-            margin-top: 10px;
-        }
-        .high-score {
-            color: #fff;
-            font-size: 18px;
-            margin-top: 20px;
-        }
+            background-color: #3478F5;    
+            color: #fff; }
     </style>
 </head>
 <body>
-    <h1>Higher or Lower Number Guessing Game</h1>
-    <p>Try to guess the correct number between 1 and 1000.</p>
-    
-    <input type="number" inputmode="numeric" id="guess" placeholder="Enter your guess">
-    <br>
-    <button onclick="checkGuess()" class="try">Guess</button>
-
-    <p id="message" class="message"></p>
-    <p id="highScore" class="high-score"></p>
+    <h1>Welcome to the Word Guessing Game!</h1>
+    <h2><span id="wordToGuess"></span></h2>
+    <h2>Enter your guess</h2><input type="text" id="userGuess" maxlength="1" placeholder="type you're guess here">
+<br>
+    <button onclick="checkGuess()">Check Guess</button>
+    <h2 id="result"></h2>
 
     <script>
-        let targetNumber, attempts, highScore;
+        
+        const words = [
+  "banana", "elephant", "giraffe", "umbrella", "chocolate", "whisper", "jazz", "ocean", "zeppelin", "quasar",
+  "nectar", "cascade", "xylophone", "quixotic", "labyrinth", "ephemeral", "serendipity", "effervescent", "mellifluous", "umbra",
+  "perspicacious", "ephemeral", "flabbergasted", "nebulous", "quizzical", "ludicrous", "bamboozle", "facetious", "discombobulate", "plethora", "supercalifragilisticexpialidocious", "onomatopoeia", "sesquipedalian", "serendipity", "effulgent", "obfuscate", "ephemeral", "labyrinthine", "susurrus", "limerence",
+  "sycophant", "acerbic", "circumlocution", "disparate", "quagmire", "ephemeral", "melancholy", "peregrination", "ephemeral", "soliloquy",
+  "ubiquitous", "serenity", "esoteric", "ephemeral", "labyrinthine", "obfuscate", "ephemeral", "quintessential", "effervescent", "garrulous",
+  "quizzical", "ephemeral", "pastiche", "obfuscate", "ephemeral", "quixotic", "esoteric", "ephemeral", "ubiquitous", "labyrinthine",
+  "enigma", "ephemeral", "quintessential", "pastiche", "obfuscate", "serendipity", "effervescent", "mellifluous", "quasar", "obfuscate",
+  "ephemeral", "soliloquy", "ubiquitous", "serendipity", "esoteric", "labyrinthine", "susurrus", "limerence", "sycophant", "disparate",
+  "quagmire", "peregrination", "melancholy", "circumlocution", "acerbic", "ephemeral", "quintessential", "effervescent", "garrulous", "quizzical"
+];
 
-        function startNewGame() {
-            targetNumber = Math.floor(Math.random() * 1000) + 1;
-            attempts = 0;
-        }
 
+        // Select a random word from the array
+        const randomIndex = Math.floor(Math.random() * words.length);
+        let currentWord = words[randomIndex];
+        
+        // Display underscores for each letter in the word
+        const wordToGuessElement = document.getElementById("wordToGuess");
+        wordToGuessElement.textContent = "_".repeat(currentWord.length);
+        
+        // Function to check the user's guess
         function checkGuess() {
-            const userGuess = parseInt(document.getElementById('guess').value);
-
-            if (isNaN(userGuess) || userGuess < 1 || userGuess > 1000) {
-                document.getElementById('message').innerHTML = 'Please enter a valid number between 1 and 1000.';
-                return;
-            }
-
-            attempts++;
-
-            if (userGuess === targetNumber) {
-                document.getElementById('message').innerHTML = `Congratulations! You guessed the correct number in ${attempts} attempts.`;
-                
-                if (attempts < highScore || highScore === undefined) {
-                    highScore = attempts;
-                    document.getElementById('highScore').innerHTML = `High Score: ${highScore} attempts!`;
-                }
-
-                startNewGame();
-
-                // Clear the Congratulations message after 3 seconds
-                setTimeout(() => {
-                    document.getElementById('message').innerHTML = '';
-                }, 3000);
-            } else if (userGuess < targetNumber) {
-                document.getElementById('message').insertAdjacentHTML('afterbegin', 'Try a higher number.<br>');
+            const userGuessElement = document.getElementById("userGuess");
+            const userGuess = userGuessElement.value.toLowerCase();
+            
+            // Check if the guessed letter is in the word
+            if (currentWord.includes(userGuess)) {
+                // Update the displayed word with the correctly guessed letter
+                currentWord.split('').forEach((letter, index) => {
+                    if (letter === userGuess) {
+                        wordToGuessElement.textContent = wordToGuessElement.textContent.substr(0, index) + userGuess + wordToGuessElement.textContent.substr(index + 1);
+                    }
+                });
+                document.getElementById("result").textContent = "Good guess!";
             } else {
-                document.getElementById('message').insertAdjacentHTML('afterbegin', 'Try a lower number.<br>');
+                document.getElementById("result").textContent = "Try again.";
             }
+            
+            // Clear the input field
+            userGuessElement.value = '';
         }
-
-        // Initialize the game
-        startNewGame();
     </script>
 </body>
 </html>
