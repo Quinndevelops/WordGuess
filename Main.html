@@ -34,19 +34,36 @@
             height: auto;
             width: auto;
             background-color: #3478F5;    
-            color: #fff; }
-    </style>
+            color: #fff; 
+        }
+        .restart {
+            padding: 5px;
+            text-size: 16px;
+            border: 1px solid #1c1c1d;
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-size: 16px;
+            margin: 3px;
+            height: auto;
+            width: auto;
+            background-color: #3478F5;    
+            color: #fff; 
+            bottom: 10px;
+            center: 10px;
+        }
+    </style> 
 </head>
 <body>
     <h1>Welcome to the Word Guessing Game!</h1>
     <h2><span id="wordToGuess"></span></h2>
-    <h2>Enter your guess</h2><input type="text" id="userGuess" maxlength="1" placeholder="type you're guess here">
+    <h2>Enter your guess</h2><input type="text" id="userGuess" maxlength="1" placeholder="type your guess here">
+    <br>
+    <button onclick="checkGuess()" class= "restart">Check Guess</button>
 <br>
-    <button onclick="checkGuess()">Check Guess</button>
+    <button onclick="restartGame()">Restart Game</button>
     <h2 id="result"></h2>
 
     <script>
-        
         const words = [
   "banana", "elephant", "giraffe", "umbrella", "chocolate", "whisper", "jazz", "ocean", "zeppelin", "quasar",
   "nectar", "cascade", "xylophone", "quixotic", "labyrinth", "ephemeral", "serendipity", "effervescent", "mellifluous", "umbra",
@@ -59,23 +76,16 @@
   "quagmire", "peregrination", "melancholy", "circumlocution", "acerbic", "ephemeral", "quintessential", "effervescent", "garrulous", "quizzical"
 ];
 
+        let currentWord = getRandomWord();
 
-        // Select a random word from the array
-        const randomIndex = Math.floor(Math.random() * words.length);
-        let currentWord = words[randomIndex];
-        
-        // Display underscores for each letter in the word
         const wordToGuessElement = document.getElementById("wordToGuess");
         wordToGuessElement.textContent = "_".repeat(currentWord.length);
-        
-        // Function to check the user's guess
+
         function checkGuess() {
             const userGuessElement = document.getElementById("userGuess");
             const userGuess = userGuessElement.value.toLowerCase();
-            
-            // Check if the guessed letter is in the word
+
             if (currentWord.includes(userGuess)) {
-                // Update the displayed word with the correctly guessed letter
                 currentWord.split('').forEach((letter, index) => {
                     if (letter === userGuess) {
                         wordToGuessElement.textContent = wordToGuessElement.textContent.substr(0, index) + userGuess + wordToGuessElement.textContent.substr(index + 1);
@@ -85,9 +95,19 @@
             } else {
                 document.getElementById("result").textContent = "Try again.";
             }
-            
-            // Clear the input field
+
             userGuessElement.value = '';
+        }
+
+        function restartGame() {
+            currentWord = getRandomWord();
+            wordToGuessElement.textContent = "_".repeat(currentWord.length);
+            document.getElementById("result").textContent = "";
+        }
+
+        function getRandomWord() {
+            const randomIndex = Math.floor(Math.random() * words.length);
+            return words[randomIndex];
         }
     </script>
 </body>
